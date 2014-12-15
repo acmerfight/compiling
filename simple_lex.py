@@ -11,9 +11,8 @@ identifier_chars = identifier_head_chars | digits
 def analyse(text_data):
     for data in text_data:
         index = 0
-        char = data[index]
         while index < len(data):
-            if char in identifier_head_chars:
+            if data[index] in identifier_head_chars:
                 start = end = index
                 if index < len(data) - 1:
                     index += 1
@@ -26,6 +25,10 @@ def analyse(text_data):
                 else:
                     break
                 print data[start:end + 1]
+                print start + 1, end + 1
+            else:
+                index += 1
+                start = end = index
 
 
 if __name__ == "__main__":
