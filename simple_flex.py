@@ -28,6 +28,8 @@ class Token(object):
         self.name = name
         self.value = value
 
+    def __str__(self):
+        return self.name + ":" + self.value
 
 class Parser(object):
     def __init__(self, lexer):
@@ -49,6 +51,9 @@ class Parser(object):
 
     def term(self):
         self.factor()
+        if self.lookahead.value not in ")|":
+            self.term()
+            self.tokens.append(Token("CONCAT", "\0x08"))
 
     def factor(self):
         self.primary()
@@ -58,6 +63,7 @@ class Parser(object):
 
     def primary(self):
         if self.lookahead.name == "LEFT_PAREN":
+            self.consume("LEFT_PAREN")
             self.exp()
             self.consume("RIGHT_PAREN")
         elif self.lookahead.name == "CHAR":
@@ -83,3 +89,7 @@ class Lexer(object):
             return token
         else:
             return Token("NONE", '')
+
+lexer = Lexer("a*b")
+parser = Parser(lexer)
+tokens = parser.parse()
