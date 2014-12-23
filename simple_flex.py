@@ -61,6 +61,11 @@ class Handler(object):
         state_start.transitions[token.value] = state_end
         nfa_stack.append(NFA(state_start, state_end))
 
+    def handle_qmark(self, token, nfa_stack):
+        pre_token = nfa_stack.pop()
+        pre_token.start.epsilon.append(pre_token.end)
+        nfa_stack.append(pre_token)
+
 
 class Parser(object):
     def __init__(self, lexer):
