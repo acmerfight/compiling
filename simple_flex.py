@@ -31,6 +31,37 @@ class Token(object):
     def __str__(self):
         return self.name + ":" + self.value
 
+
+class State(object):
+    def __init__(self, name):
+        self.epsilon = []
+        self.transitions = {}
+        self.name = name
+        self.is_end = False
+
+
+class NFA(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+        end.is_end = True
+
+
+class Handler(object):
+    def __init__(self):
+        self.state_count = 0
+
+    def create_state(self):
+        self.state_count += 1
+        return State('s' + str(self.state_count))
+
+    def handle_char(self, token, nfa_stack):
+        state_start = self.create_state()
+        state_end = self.create_state()
+        state_start.transitions[token.value] = state_end
+        nfa_stack.append(NFA(state_start, state_end))
+
+
 class Parser(object):
     def __init__(self, lexer):
         self.lexer = lexer
