@@ -61,6 +61,13 @@ class Handler(object):
         state_start.transitions[token.value] = state_end
         nfa_stack.append(NFA(state_start, state_end))
 
+    def handle_concat(self, token, nfa_stack):
+        pre_nfa = nfa_stack.pop()
+        more_pre_nfa = nfa_stack.pop()
+        more_pre_nfa.is_end = False
+        more_pre_nfa.end.epsilon.append(pre_nfa.start)
+        nfa_stack.append(NFA(more_pre_nfa.start, pre_nfa.end))
+
     def handle_qmark(self, token, nfa_stack):
         pre_token = nfa_stack.pop()
         pre_token.start.epsilon.append(pre_token.end)
