@@ -68,6 +68,19 @@ class Handler(object):
         more_pre_nfa.end.epsilon.append(pre_nfa.start)
         nfa_stack.append(NFA(more_pre_nfa.start, pre_nfa.end))
 
+    def handle_alt(self, token, nfa_stack):
+        pre_nfa = nfa_stack.pop()
+        more_pre_nfa = nfa_stack.pop()
+        s0 = self.create_state()
+        s0.epsilon = [more_pre_nfa.start, pre_nfa.start]
+        s3 = self.create_state()
+        more_pre_nfa.end.epsilon.append(s3)
+        pre_nfa.end.epsilon.append(s3)
+        more_pre_nfa.is_end = False
+        pre_nfa.is_end = False
+        nfa = NFA(s0, s3)
+        nfa_stack.append(nfa)
+
     def handle_qmark(self, token, nfa_stack):
         pre_token = nfa_stack.pop()
         pre_token.start.epsilon.append(pre_token.end)
