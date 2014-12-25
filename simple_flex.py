@@ -81,6 +81,18 @@ class Handler(object):
         nfa = NFA(s0, s3)
         nfa_stack.append(nfa)
 
+    def handle_rep(self, token, nfa_stack):
+        pre_nfa = nfa_stack.pop()
+        s0 = self.create_state()
+        s1 = self.create_state()
+        s0.epsilon = [pre_nfa.start]
+        if token.name == "STAR":
+            s0.epsilon.append(s1)
+        pre_nfa.end.epsilon.extend([s1, pre_nfa.start])
+        pre_nfa.end.is_end = False
+        nfa = NFA(s0, s1)
+        nfa_stack.append(nfa)
+
     def handle_qmark(self, token, nfa_stack):
         pre_token = nfa_stack.pop()
         pre_token.start.epsilon.append(pre_token.end)
