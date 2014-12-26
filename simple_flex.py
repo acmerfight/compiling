@@ -46,6 +46,16 @@ class NFA(object):
         self.end = end
         end.is_end = True
 
+    def add_state(self, state, state_set):
+        if state in state_set:
+            return
+        state_set.add(state)
+        for eps in state.epsilon:
+            self.add_state(eps, state_set)
+
+    def match(self, s):
+        pass
+
 
 class Handler(object):
     def __init__(self):
